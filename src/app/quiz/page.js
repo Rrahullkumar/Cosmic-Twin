@@ -350,7 +350,6 @@ Please try again, or contact support if the issue persists.`);
         
         .neon-next-button {
           background-color: transparent;
-          border: 2px solid;
           border-image-slice: 1;
           border-image-source: linear-gradient(to right, var(--primary-color), var(--secondary-color));
           color: white;

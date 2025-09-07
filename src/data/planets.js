@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const planetsData = [
   {
-    id: uuidv4(), // ✅ Generate UUID instead of "xylos"
+    id: uuidv4(), // Generate UUID instead of "xylos"
     name: 'Planet Xylos',
     slug: 'xylos', // Keep the original name as slug
     type: 'Visionary',
@@ -13,7 +13,7 @@ export const planetsData = [
     element: 'air'
   },
   {
-    id: uuidv4(), // ✅ Generate UUID instead of "zylos"
+    id: uuidv4(), // Generate UUID instead of "zylos"
     name: 'Planet Zylos',
     slug: 'zylos', 
     type: 'Pioneer',
@@ -24,7 +24,7 @@ export const planetsData = [
     element: 'fire'
   },
   {
-    id: uuidv4(), // ✅ Generate UUID instead of "nilos"
+    id: uuidv4(), // Generate UUID instead of "nilos"
     name: 'Planet Nilos',
     slug: 'nilos',
     type: 'Scholar',
