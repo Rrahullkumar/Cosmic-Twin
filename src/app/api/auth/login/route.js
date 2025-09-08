@@ -1,6 +1,6 @@
-import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 import { connectDB } from '@/lib/db';
 import User from '@/models/User';
 
@@ -11,12 +11,7 @@ export async function POST(request) {
     await connectDB();
     const user = await User.findOne({ email });
     
-    if (!user) {
-      return Response.json({ error: 'Invalid credentials' }, { status: 401 });
-    }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
+    if (!user || !await bcrypt.compare(password, user.password)) {
       return Response.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
@@ -26,8 +21,8 @@ export async function POST(request) {
         userId: user._id.toString(),
         email: user.email 
       },
-      process.env.SESSION_SECRET,
-      { expiresIn: '7d' } // Token expires in 7 days
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
     );
 
     // Set HTTP-only cookie
@@ -40,10 +35,12 @@ export async function POST(request) {
       path: '/'
     });
 
+    console.log('✅ Login successful for:', user.name);
+
     return Response.json({
       success: true,
       user: {
-        id: user._id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email
       }

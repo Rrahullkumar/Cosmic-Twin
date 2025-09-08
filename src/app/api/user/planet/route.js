@@ -20,10 +20,10 @@ export async function GET() {
       }, { status: 404 });
     }
 
-    //  ENSURE TRAITS IS AN ARRAY
+    // Ensure traits is an array
     const planet = userWithPlanet.matched_planet;
     if (planet.traits && !Array.isArray(planet.traits)) {
-      planet.traits = [planet.traits]; // Convert string to array if needed
+      planet.traits = [planet.traits];
     }
 
     console.log('🔍 Planet data being returned:', JSON.stringify(planet, null, 2));

@@ -24,7 +24,7 @@ export async function getCurrentUser() {
       return null;
     }
 
-    console.log('✅ User authenticated via JWT:', user.name);
+    // console.log('✅ User authenticated via JWT:', user.name);
     return user;
     
   } catch (error) {

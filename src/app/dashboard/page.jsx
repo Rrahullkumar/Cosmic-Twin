@@ -145,7 +145,7 @@ export default function Dashboard() {
             <div className="min-h-screen overflow-x-hidden w-full" style={{ 
                 fontFamily: 'Quicksand, sans-serif', 
                 backgroundColor: '#0b021d',
-                maxWidth: '100vw' // ✅ PREVENT VIEWPORT OVERFLOW
+                maxWidth: '100vw' // PREVENT VIEWPORT OVERFLOW
             }}>
                 {/* ✅ CONSTRAINED STARS BACKGROUND */}
                 <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>

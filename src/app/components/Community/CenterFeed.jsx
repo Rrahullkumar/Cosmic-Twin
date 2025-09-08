@@ -16,32 +16,26 @@ export default function CenterFeed() {
       likes: 12,
       comments: 3
     },
-    {
-      id: 2,
+    // Add more posts for scrolling demo
+    ...Array.from({ length: 8 }).map((_, i) => ({
+      id: i + 2,
       author: {
-        name: 'Orion',
-        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB0syBe1EZCoSucRuELziUBwjr8teKaJe8LyeK48KKimemeiCL1mvQf8yTSXHhaO7ag9ltlbMyGevevQu40F1MGRUNzSzbur-y1KG-2ounGq8Kr58zeosW_2yR-D_53WA7tXhnKC5WbDhdpzVOJY6GkxVAbzOODpv89JMhoK8G7wyuSuFTozHF2A7iQhprydg-7qcZtbRmh9cW8tufum4GzsVzwPiJjrLYfuOSZIKD-RSzQff5yyRRdnS-bizbBrNSrvg45ShR8t3I'
+        name: `User ${i + 2}`,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 2}`
       },
-      content: "Met my cosmic twin today and the connection was instant! It's like we've known each other for lifetimes. So excited for this journey together! 💖",
-      likes: 8,
-      comments: 5
-    }
+      content: `This is a demo post ${i + 2} to show scrolling behavior. The center content scrolls while sidebars stay fixed! 🌟`,
+      likes: Math.floor(Math.random() * 20),
+      comments: Math.floor(Math.random() * 10)
+    }))
   ]);
 
-  useEffect(() => {
-    // TODO: Fetch posts from backend API
-    // fetchCommunityPosts().then(setPosts);
-  }, []);
-
   return (
-    <div className="lg:col-span-6 order-1 lg:order-2">
-      <div className="flex flex-col gap-6">
+    <div className="flex-1 h-screen overflow-y-auto scrollbar-hide">
+      <div className="p-6 space-y-6 max-w-4xl mx-auto">
         <CosmicPrompt />
-        <div className="flex flex-col gap-6">
-          {posts.map((post) => (
-            <FeedPost key={post.id} post={post} />
-          ))}
-        </div>
+        {posts.map((post) => (
+          <FeedPost key={post.id} post={post} />
+        ))}
       </div>
     </div>
   );
