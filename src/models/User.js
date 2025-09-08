@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
   quiz_completed_at: {
     type: Date,
   },
-  qdrant_point_id: {  // ✅ ADD THIS FIELD
+  qdrant_point_id: {
     type: String,
   },
   matched_planet: {
@@ -33,6 +33,14 @@ const UserSchema = new mongoose.Schema({
   planet_matched: {
     type: Boolean,
     default: false,
+  },
+  personality_vector: {  // ✨ ADD THIS FIELD
+    type: [Number],
+    required: false
+  },
+  personality_profile: {  // ✨ ADD THIS FIELD
+    type: String,
+    required: false
   },
 }, {
   timestamps: true,

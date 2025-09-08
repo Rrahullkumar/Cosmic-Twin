@@ -145,7 +145,6 @@ export default function QuizPage() {
 
   const handleNext = async () => {
     if (selectedAnswer !== null) {
-      // Save answer
       const newAnswers = [...answers, selectedAnswer];
       setAnswers(newAnswers);
 
@@ -153,13 +152,13 @@ export default function QuizPage() {
         setCurrentQuestion(prev => prev + 1);
         setSelectedAnswer(null);
       } else {
-        // Quiz completed - process results
         setIsLoading(true);
 
         try {
-          console.log('🎉 Quiz completed! Processing results...');
+          console.log('🎉 Quiz completed! Final answers:', newAnswers);
+          console.log('📊 Answer count:', newAnswers.length);
+          console.log('📊 Each answer:', newAnswers.map((ans, idx) => `Q${idx}: ${ans}`));
 
-          // Step 1: Save quiz results and generate embedding
           const completeResponse = await fetch('/api/quiz/complete', {
             method: 'POST',
             headers: {
@@ -190,7 +189,7 @@ export default function QuizPage() {
 
           // Step 3: Show results with better formatting
           const similarityPercent = Math.round(matchData.matched_planet.similarity_score * 100);
-          
+
           alert(`🎉 Congratulations ${userName}!
 
 🌌 Your Cosmic Twin: ${matchData.matched_planet.name}

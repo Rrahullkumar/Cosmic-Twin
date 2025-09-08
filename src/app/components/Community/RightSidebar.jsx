@@ -3,30 +3,46 @@ import { useState } from 'react';
 import TwinmateCard from './TwinmateCard';
 
 export default function RightSidebar() {
-  const [twinmates, setTwinmates] = useState([
-    { name: "Stella", planet: "Venus", compatibility: "92%", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDAyIoCrkqW0lKLhGHweyKk_fedis1aHHMIjfe4cHqdfqe8dFF_Ud_qIBQK_pEjsR6zEN7i1NQgyn2ZpUVyYE18Pmbj3AtN72lBxdAvTR1a4Z5lfTGG1xeXLEZgk-vKVaSujO9nGS3qNZrA_GoBZ26o92LlU910EgHOfLOrgk2cre_NmjFPHhD4pvUH3rFA4ijQUDJ6Q1zOx3K0Nhp9VLwKDaxu1Arc7cgyFiqV0WzvH30koWaWL2Wf1GCMelj6qSwNfq4bhJQLcPA" },
-    { name: "Leo", planet: "Mars", compatibility: "88%", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuAuYaxiWP9zWwu-TbBS4rxetxWbBBSh1pQ_27w_FLONClupLwIEYWevERtH6QeCmJ7akl2khSOVf0suMbjzxGj4bw8XMKgr2ma8OFTnzl-6ucTyi-NJvQMjIov1lUzKwb7hxqBDKhmBQoqnUQyhA6aA0TlsP1rGq6Ml05m2jgV2AOjwuefRMIuwAHUTD8-oBwalzkGFximdV7F5ADnVCnE4NbLn3yii5D58gYoQ78Vx9HuRQ5FCgG7oTBZmgvS6An_fzZDDXAkSsNA" },
-    { name: "Aurora", planet: "Jupiter", compatibility: "85%", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuAbWAQePx524o9fUhPPsRv6X0a41_hHY3PyFee1Sf7aDXGWGo3WTkK1NciHAoogWY5nU5zXA27CY8e9oudf21XEFKsBX9rWiMrIXPabNE-D4c_aKGp_FGaHm1M8qO5mOccdWCDpLmV8pQx6dh6z0IB66BPpvWsr7iY0_jxrxGHE9mhgLvuHzcVD3bD62eUBiiT_oO-xAj-1WxV8cgus_D5uq-TQm3twtS08hoAkJvQOpwZGIrJ6pWmqnIJTGux2WhQodr63dF4lFnU" },
-    // Add more for scrolling demo
-    ...Array.from({ length: 6 }).map((_, i) => ({
-      name: `Cosmic${i + 4}`,
-      planet: `Planet ${i + 4}`,
-      compatibility: `${85 - i * 3}%`,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=cosmic${i + 4}`
-    }))
-  ]);
-
+  const [twinmates, setTwinmates] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleFindTwinmates = async () => {
     setIsLoading(true);
+    setError(null);
+    
     try {
-      // TODO: Call Qdrant similarity search API
-      console.log('Finding cosmic twinmates...');
+      console.log('🔍 Searching for cosmic twinmates...');
+      
+      const response = await fetch('/api/twinmates/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to search twinmates: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.success && data.twinmates) {
+        setTwinmates(data.twinmates.slice(0, 5)); // Show top 2-5 results
+        console.log('✅ Found twinmates:', data.twinmates.length);
+      } else {
+        setError(data.error || 'No twinmates found');
+        setTwinmates([]);
+      }
+      
     } catch (error) {
       console.error('Error finding twinmates:', error);
+      setError('Failed to find twinmates. Please try again.');
+      setTwinmates([]);
     } finally {
       setIsLoading(false);
+      setHasSearched(true);
     }
   };
 
@@ -36,6 +52,7 @@ export default function RightSidebar() {
         <h3 className="text-[var(--dark-text)] text-lg font-bold leading-tight tracking-[-0.015em] mb-4">
           Find My Cosmic Twinmates
         </h3>
+        
         <button
           onClick={handleFindTwinmates}
           disabled={isLoading}
@@ -44,13 +61,54 @@ export default function RightSidebar() {
             background: 'linear-gradient(to right, var(--muted-pink), var(--lavender-purple))'
           }}
         >
-          <span>{isLoading ? 'Searching...' : 'Find Twinmates ✨'}</span>
+          <span>
+            {isLoading ? (
+              <>
+                <span className="animate-spin mr-2">⨳</span>
+                Searching...
+              </>
+            ) : (
+              'Find Twinmates ✨'
+            )}
+          </span>
         </button>
 
-        <div className="mt-6 space-y-2">
-          {twinmates.map((twinmate, index) => (
-            <TwinmateCard key={index} twinmate={twinmate} />
-          ))}
+        {/* Results Section */}
+        <div className="mt-6">
+          {error && (
+            <div className="bg-red-100 border border-red-300 text-red-700 px-3 py-2 rounded-lg text-sm text-center mb-4">
+              {error}
+            </div>
+          )}
+
+          {hasSearched && twinmates.length === 0 && !error && !isLoading && (
+            <div className="text-center text-[var(--subtle-text)] text-sm py-8">
+              <div className="mb-2">🌌</div>
+              <div>No cosmic twinmates found</div>
+              <div className="text-xs mt-1">Try completing your personality quiz first!</div>
+            </div>
+          )}
+
+          {twinmates.length > 0 && (
+            <>
+              <div className="text-center text-[var(--subtle-text)] text-xs mb-3">
+                Found {twinmates.length} cosmic twinmate{twinmates.length !== 1 ? 's' : ''}
+              </div>
+              <div className="space-y-2">
+                {twinmates.map((twinmate, index) => (
+                  <TwinmateCard key={`${twinmate.id}-${index}`} twinmate={twinmate} />
+                ))}
+              </div>
+            </>
+          )}
+
+          {!hasSearched && !isLoading && (
+            <div className="text-center text-[var(--subtle-text)] text-sm py-8">
+              <div className="mb-2">✨</div>
+              <div>Click the button above to discover</div>
+              <div>your cosmic twinmates!</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

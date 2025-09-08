@@ -51,6 +51,7 @@ export async function POST(request) {
 
     console.log('🧠 Generating embedding...');
     const embedding = await generateEmbedding(personalityProfile);
+    console.log('✅ Embedding generated, length:', embedding.length);
     
     // Generate UUID for Qdrant point ID
     const qdrantPointId = uuidv4();
@@ -82,40 +83,54 @@ export async function POST(request) {
 
     if (!response.ok) {
       const error = await response.text();
+      console.error('❌ Qdrant storage failed:', error);
       throw new Error(`Qdrant error: ${error}`);
     }
 
     console.log('✅ Qdrant embedding stored successfully');
 
-    // ✅ UPDATE MONGODB WITH BETTER ERROR HANDLING
+    // ✅ CRITICAL FIX: UPDATE MONGODB WITH PERSONALITY_VECTOR
+    console.log('💾 Updating MongoDB with personality vector...');
     await connectDB();
+    
     const updateResult = await User.findByIdAndUpdate(
       user._id,
       {
-        quiz_completed: true,
-        quiz_answers: answers,
-        quiz_completed_at: new Date(),
-        qdrant_point_id: qdrantPointId
+        $set: {  // ✨ Use $set to ensure the update works
+          quiz_completed: true,
+          quiz_answers: answers,
+          quiz_completed_at: new Date(),
+          qdrant_point_id: qdrantPointId,
+          personality_vector: embedding,        // ✨ CRITICAL: This field
+          personality_profile: personalityProfile
+        }
       },
-      { new: true } // Return updated document
+      { new: true, upsert: false } // Return updated document, don't create new
     );
 
     console.log('💾 MongoDB update result:', {
       userId: updateResult._id,
-      qdrant_point_id: updateResult.qdrant_point_id,
-      quiz_completed: updateResult.quiz_completed
+      quiz_completed: updateResult.quiz_completed,
+      has_personality_vector: !!updateResult.personality_vector,
+      vector_length: updateResult.personality_vector?.length || 0,
+      qdrant_point_id: updateResult.qdrant_point_id
     });
 
-    if (!updateResult.qdrant_point_id) {
-      throw new Error('Failed to save qdrant_point_id to MongoDB');
+    // ✨ VERIFY the update worked
+    if (!updateResult.personality_vector) {
+      throw new Error('Failed to save personality_vector to MongoDB');
     }
 
-    console.log('✅ Quiz results saved successfully!');
+    console.log('✅ Quiz results saved successfully to both Qdrant and MongoDB!');
 
     return Response.json({
       success: true,
       message: 'Quiz results saved successfully',
-      qdrant_point_id: qdrantPointId // Return for debugging
+      debug: {
+        qdrant_point_id: qdrantPointId,
+        personality_vector_length: embedding.length,
+        mongodb_updated: !!updateResult.personality_vector
+      }
     });
 
   } catch (error) {
