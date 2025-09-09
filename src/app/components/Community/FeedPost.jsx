@@ -1,25 +1,46 @@
+// FeedPost.jsx
 'use client';
+import { useEffect } from 'react';
 
 export default function FeedPost({ post }) {
   const { id, author, content, image, likes = 0, comments = 0, liked = false } = post;
 
+  // Load Material Symbols font
+  useEffect(() => {
+    if (!document.querySelector('link[href*="material-symbols"]')) {
+      const link = document.createElement('link');
+      link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+  }, []);
+
   const handleLike = async () => {
     // TODO: Send like to backend API
-    // await toggleLike(id);
   };
 
   const handleComment = () => {
-    // TODO: Open comment modal/section
     console.log('Comment on post:', id);
   };
 
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm">
       <div className="flex items-start gap-4">
-        <div
-          className="w-12 h-12 rounded-full bg-cover bg-center flex-shrink-0"
-          style={{ backgroundImage: `url("${author.avatar}")` }}
-        />
+        {/* User Avatar or Initials */}
+        {author.avatar ? (
+          <div
+            className="w-12 h-12 rounded-full bg-cover bg-center flex-shrink-0"
+            style={{ backgroundImage: `url("${author.avatar}")` }}
+          />
+        ) : (
+          <div 
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+            style={{ background: 'var(--muted-pink)' }}
+          >
+            {author.initials || author.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
+          </div>
+        )}
+
         <div className="flex-grow min-w-0">
           <p className="text-[var(--dark-text)] text-base font-bold">{author.name}</p>
           <p className="text-[var(--subtle-text)] text-sm mb-3 break-words">
