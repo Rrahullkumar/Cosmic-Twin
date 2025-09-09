@@ -20,14 +20,14 @@ export async function POST(request) {
     const embedding = await generateEmbedding(embeddingText);
     
     // 🔍 DETAILED EMBEDDING DEBUG
-    console.log('🔍 MISTRAL EMBEDDING DEBUG:');
-    console.log('- Raw type:', typeof embedding);
-    console.log('- Is Array:', Array.isArray(embedding));
-    console.log('- Length:', embedding?.length);
-    console.log('- First 10 values:', embedding?.slice(0, 10));
-    console.log('- Last 5 values:', embedding?.slice(-5));
-    console.log('- Min value:', embedding ? Math.min(...embedding) : 'N/A');
-    console.log('- Max value:', embedding ? Math.max(...embedding) : 'N/A');
+    // console.log('🔍 MISTRAL EMBEDDING DEBUG:');
+    // console.log('- Raw type:', typeof embedding);
+    // console.log('- Is Array:', Array.isArray(embedding));
+    // console.log('- Length:', embedding?.length);
+    // console.log('- First 10 values:', embedding?.slice(0, 10));
+    // console.log('- Last 5 values:', embedding?.slice(-5));
+    // console.log('- Min value:', embedding ? Math.min(...embedding) : 'N/A');
+    // console.log('- Max value:', embedding ? Math.max(...embedding) : 'N/A');
     
     // Check for problematic values
     if (Array.isArray(embedding)) {

@@ -68,7 +68,7 @@ export async function POST(request) {
         vector: userVector,
         limit: 3,
         with_payload: true,
-        score_threshold: 0.3 // Lowered threshold for better matches
+        // score_threshold: 0.1 // Lowered threshold for better matches
       })
     });
 

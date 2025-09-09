@@ -2,24 +2,24 @@ import { generateEmbedding } from '@/lib/mistral';
 import { planetsData } from '@/data/planets';
 
 export async function POST(request) {
-  console.log('🚀 Seed planets API called - FIXED VERSION');
+  console.log('Seed planets API called - FIXED VERSION');
   
   try {
     // Process all planets
     for (const planet of planetsData) {
-      console.log(`🪐 Processing ${planet.name}...`);
+      console.log(`Processing ${planet.name}...`);
       console.log(`- Planet ID (UUID): ${planet.id}`); // Now shows UUID
       
       // Generate embedding
       const embeddingText = `${planet.name} is a ${planet.type} planet. ${planet.description}`;
       const embedding = await generateEmbedding(embeddingText);
       
-      console.log('✅ Embedding generated, length:', embedding.length);
+      console.log('Embedding generated, length:', embedding.length);
       
       // Create payload with raw HTTP API
       const rawPayload = {
         points: [{
-          id: planet.id, // ✅ Now uses UUID instead of "xylos"
+          id: planet.id, // Now uses UUID instead of "xylos"
           vector: embedding,
           payload: {
             name: planet.name,

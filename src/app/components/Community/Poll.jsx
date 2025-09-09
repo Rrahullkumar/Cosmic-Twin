@@ -95,11 +95,6 @@ const Poll = () => {
           {poll?.question || "What's your favorite planet?"}
         </p>
         
-        {/* Debug info */}
-        {/* <p className="text-white/50 text-xs mb-2">
-          Debug: {poll ? 'API Data' : 'Fallback'}
-        </p> */}
-        
         <div className="space-y-2">
           {(poll?.options || [
             { text: "Earth", votes: 0 },

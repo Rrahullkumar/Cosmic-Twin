@@ -16,39 +16,44 @@ export async function POST(request) {
     const { answers } = await request.json();
     console.log('📊 Quiz answers:', answers);
     
-    // Create personality profile
-    const personalityProfile = answers.map((answerIndex, questionIndex) => {
-      const questions = [
-        "What kind of cosmic journey excites you the most?",
-        "If you were a star, how would you shine?",
-        "Which environment feels like 'home' to you?",
-        "In a cosmic crew, what role would you play?",
-        "How do you usually handle challenges?",
-        "If you discovered a new planet, what would you name it after?",
-        "What's your energy vibe?",
-        "Which cosmic companion would you choose?",
-        "What draws you the most in the night sky?",
-        "How do you see your future?"
-      ];
+    // ✨ FIXED: Create highly distinctive personality profiles
+    const personalityArchetypes = {
+      creative: "PURE CREATIVE VISIONARY: I am an ethereal artist who lives entirely in dreams and imagination. My soul flows like liquid starlight through realms of pure creativity. I value mystical experiences, abstract art, spiritual connections, and transcendent beauty above all practical concerns. Logic and structure feel restrictive to my free-flowing creative spirit. I seek wonder, magic, and artistic expression in every moment.",
+      
+      adventurous: "EXTREME FRONTIER EXPLORER: I am a fearless pioneer who craves intense physical danger and extreme challenges. I thrive on adrenaline rushes, extreme sports, wilderness survival, and bold conquest. I value courage over safety, risk over security, and raw adventure over comfort. My spirit demands constant movement, exploration, and pushing boundaries. Sitting still or routine activities completely drain my energy.",
+      
+      analytical: "PURE LOGICAL SCHOLAR: I am a systematic analytical mind who operates through pure logic and scientific rigor. I prioritize data analysis, mathematical precision, research methodology, and intellectual pursuits above all emotional concerns. Social activities and creative expression feel inefficient and distracting. My mind operates like a precision instrument, dissecting problems through methodical reasoning and empirical evidence."
+    };
 
-      const answerOptions = [
-        ["Exploring unknown galaxies", "Floating peacefully among stars", "Surviving on a fiery volcanic world", "Building futuristic space colonies"],
-        ["Bright and blazing", "Cool and distant", "Flickering mysteriously", "Constant and reliable"],
-        ["Vast oceans", "Icy deserts", "Volcanic landscapes", "Dense, futuristic cities"],
-        ["The fearless explorer", "The calm strategist", "The energetic motivator", "The visionary builder"],
-        ["Head-on, with fire and passion", "Calm and thoughtful", "Adapt and improvise", "Logical and structured"],
-        ["A powerful element", "A mythological figure", "A feeling or emotion", "Something futuristic"],
-        ["Fiery & intense", "Calm & collected", "Adventurous & wild", "Curious & imaginative"],
-        ["A loyal robot", "A mystical alien creature", "A powerful spaceship", "Just the stars themselves"],
-        ["Brightest stars", "Silent dark void", "Shooting meteors", "Colorful nebulas"],
-        ["Full of bold adventures", "Peaceful and stable", "Constantly changing & evolving", "Building something that lasts"]
-      ];
+    // ✨ FIXED: Simplified trait scoring based on key differentiating questions
+    const keyAnswers = [answers[0], answers[3], answers[6]]; // Most distinctive questions
+    let creativeScore = 0, adventurousScore = 0, analyticalScore = 0;
 
-      const question = questions[questionIndex];
-      const answer = answerOptions[questionIndex][answerIndex];
-      return `${question} ${answer}`;
-    }).join('. ');
+    keyAnswers.forEach(answer => {
+      if (answer === 0) creativeScore += 3;      // Strong creative weight
+      else if (answer === 1) adventurousScore += 3; // Strong adventurous weight  
+      else if (answer === 2) analyticalScore += 3;  // Strong analytical weight
+      else creativeScore += 1; // Default slight creative lean
+    });
 
+    // Add secondary scoring from remaining answers
+    answers.slice(3).forEach(answer => {
+      if (answer === 0) creativeScore += 1;
+      else if (answer === 1) adventurousScore += 1;
+      else if (answer === 2) analyticalScore += 1;
+    });
+
+    // Determine dominant archetype
+    let dominantType = 'creative'; // Default
+    if (adventurousScore > creativeScore && adventurousScore > analyticalScore) {
+      dominantType = 'adventurous';
+    } else if (analyticalScore > creativeScore && analyticalScore > adventurousScore) {
+      dominantType = 'analytical';
+    }
+
+    const personalityProfile = personalityArchetypes[dominantType];
+
+    console.log('🧠 Generated personality type:', dominantType);
     console.log('🧠 Generating embedding...');
     const embedding = await generateEmbedding(personalityProfile);
     console.log('✅ Embedding generated, length:', embedding.length);
@@ -75,6 +80,7 @@ export async function POST(request) {
             email: user.email,
             answers: answers,
             personality_profile: personalityProfile,
+            personality_type: dominantType,
             created_at: new Date().toISOString()
           }
         }]
@@ -102,7 +108,8 @@ export async function POST(request) {
           quiz_completed_at: new Date(),
           qdrant_point_id: qdrantPointId,
           personality_vector: embedding,        // ✨ CRITICAL: This field
-          personality_profile: personalityProfile
+          personality_profile: personalityProfile,
+          personality_type: dominantType
         }
       },
       { new: true, upsert: false } // Return updated document, don't create new
@@ -113,7 +120,8 @@ export async function POST(request) {
       quiz_completed: updateResult.quiz_completed,
       has_personality_vector: !!updateResult.personality_vector,
       vector_length: updateResult.personality_vector?.length || 0,
-      qdrant_point_id: updateResult.qdrant_point_id
+      qdrant_point_id: updateResult.qdrant_point_id,
+      personality_type: updateResult.personality_type
     });
 
     // ✨ VERIFY the update worked
@@ -129,7 +137,8 @@ export async function POST(request) {
       debug: {
         qdrant_point_id: qdrantPointId,
         personality_vector_length: embedding.length,
-        mongodb_updated: !!updateResult.personality_vector
+        mongodb_updated: !!updateResult.personality_vector,
+        personality_type: dominantType
       }
     });
 

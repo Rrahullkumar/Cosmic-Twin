@@ -1,7 +1,36 @@
 // Header.jsx
+'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      console.log('🚪 Logging out...');
+      
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        console.log('✅ Logout successful');
+        // Redirect to login page
+        router.push('/auth/login');
+      } else {
+        console.error('❌ Logout failed:', data.message);
+      }
+    } catch (error) {
+      console.error('❌ Logout error:', error);
+    }
+  };
+
   return (
     <header className="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-20">
       <div className="container mx-auto px-6">
@@ -45,12 +74,12 @@ const Header = () => {
                 >
                   User Profile
                 </a>
-                <a 
-                  className="block px-4 py-2 text-sm text-[var(--dark-text)] hover:bg-[var(--warm-lilac-gray)]"
-                  href="#"
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left block px-4 py-2 text-sm text-[var(--dark-text)] hover:bg-[var(--warm-lilac-gray)] transition-colors"
                 >
                   Logout
-                </a>
+                </button>
               </div>
             </div>
           </div>
