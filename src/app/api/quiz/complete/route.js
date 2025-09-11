@@ -15,41 +15,46 @@ export async function POST(request) {
 
     const { answers } = await request.json();
     console.log('📊 Quiz answers:', answers);
-    
+
     // ✨ FIXED: Create highly distinctive personality profiles
     const personalityArchetypes = {
       creative: "PURE CREATIVE VISIONARY: I am an ethereal artist who lives entirely in dreams and imagination. My soul flows like liquid starlight through realms of pure creativity. I value mystical experiences, abstract art, spiritual connections, and transcendent beauty above all practical concerns. Logic and structure feel restrictive to my free-flowing creative spirit. I seek wonder, magic, and artistic expression in every moment.",
-      
+
       adventurous: "EXTREME FRONTIER EXPLORER: I am a fearless pioneer who craves intense physical danger and extreme challenges. I thrive on adrenaline rushes, extreme sports, wilderness survival, and bold conquest. I value courage over safety, risk over security, and raw adventure over comfort. My spirit demands constant movement, exploration, and pushing boundaries. Sitting still or routine activities completely drain my energy.",
-      
+
       analytical: "PURE LOGICAL SCHOLAR: I am a systematic analytical mind who operates through pure logic and scientific rigor. I prioritize data analysis, mathematical precision, research methodology, and intellectual pursuits above all emotional concerns. Social activities and creative expression feel inefficient and distracting. My mind operates like a precision instrument, dissecting problems through methodical reasoning and empirical evidence."
     };
 
     // ✨ FIXED: Simplified trait scoring based on key differentiating questions
+    // ✨ CORRECTED: Properly map quiz answers to personality types
     const keyAnswers = [answers[0], answers[3], answers[6]]; // Most distinctive questions
     let creativeScore = 0, adventurousScore = 0, analyticalScore = 0;
 
     keyAnswers.forEach(answer => {
-      if (answer === 0) creativeScore += 3;      // Strong creative weight
-      else if (answer === 1) adventurousScore += 3; // Strong adventurous weight  
-      else if (answer === 2) analyticalScore += 3;  // Strong analytical weight
-      else creativeScore += 1; // Default slight creative lean
+      if (answer === 0) adventurousScore += 4;      // Index 0 = Adventurous (Zylos)
+      else if (answer === 1) analyticalScore += 5;  // Index 1 = Analytical (Nilos) ✅
+      else if (answer === 2) adventurousScore += 3; // Index 2 = Also Adventurous  
+      else if (answer === 3) creativeScore += 3;    // Index 3 = Creative (Xylos)
+      else analyticalScore += 1; // Default analytical lean
     });
 
-    // Add secondary scoring from remaining answers
+    // Add secondary scoring from remaining answers with heavier analytical weight
     answers.slice(3).forEach(answer => {
-      if (answer === 0) creativeScore += 1;
-      else if (answer === 1) adventurousScore += 1;
-      else if (answer === 2) analyticalScore += 1;
+      if (answer === 0) adventurousScore += 1;
+      else if (answer === 1) analyticalScore += 2; // ✅ Boost analytical scoring
+      else if (answer === 2) adventurousScore += 1;
+      else if (answer === 3) creativeScore += 1;
     });
 
-    // Determine dominant archetype
-    let dominantType = 'creative'; // Default
-    if (adventurousScore > creativeScore && adventurousScore > analyticalScore) {
+    // Determine dominant archetype with analytical preference
+    let dominantType = 'analytical'; // Default to analytical
+    if (adventurousScore > analyticalScore && adventurousScore > creativeScore) {
       dominantType = 'adventurous';
-    } else if (analyticalScore > creativeScore && analyticalScore > adventurousScore) {
-      dominantType = 'analytical';
+    } else if (creativeScore > analyticalScore && creativeScore > adventurousScore) {
+      dominantType = 'creative';
     }
+    // If tied or close, default to analytical (Nilos)
+
 
     const personalityProfile = personalityArchetypes[dominantType];
 
@@ -57,11 +62,11 @@ export async function POST(request) {
     console.log('🧠 Generating embedding...');
     const embedding = await generateEmbedding(personalityProfile);
     console.log('✅ Embedding generated, length:', embedding.length);
-    
+
     // Generate UUID for Qdrant point ID
     const qdrantPointId = uuidv4();
     console.log('📋 Generated Qdrant point ID:', qdrantPointId);
-    
+
     // Store in Qdrant users collection
     console.log('💾 Storing user embedding in Qdrant...');
     const response = await fetch(`${process.env.QDRANT_URL}/collections/users/points`, {
@@ -98,7 +103,7 @@ export async function POST(request) {
     // ✅ CRITICAL FIX: UPDATE MONGODB WITH PERSONALITY_VECTOR
     console.log('💾 Updating MongoDB with personality vector...');
     await connectDB();
-    
+
     const updateResult = await User.findByIdAndUpdate(
       user._id,
       {
@@ -144,8 +149,8 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('💥 Quiz completion error:', error);
-    return Response.json({ 
-      error: 'Failed to save quiz results: ' + error.message 
+    return Response.json({
+      error: 'Failed to save quiz results: ' + error.message
     }, { status: 500 });
   }
 }

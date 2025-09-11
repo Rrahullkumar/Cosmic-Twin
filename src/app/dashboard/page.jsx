@@ -142,8 +142,8 @@ export default function Dashboard() {
             `}</style>
 
             {/* ✅ ROOT CONTAINER WITH OVERFLOW PREVENTION */}
-            <div className="min-h-screen overflow-x-hidden w-full" style={{ 
-                fontFamily: 'Quicksand, sans-serif', 
+            <div className="min-h-screen overflow-x-hidden w-full" style={{
+                fontFamily: 'Quicksand, sans-serif',
                 backgroundColor: '#0b021d',
                 maxWidth: '100vw' // PREVENT VIEWPORT OVERFLOW
             }}>
@@ -209,12 +209,11 @@ export default function Dashboard() {
                                         {planet?.traits?.slice(0, 4).map((trait, index) => (
                                             <span
                                                 key={index}
-                                                className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap ${
-                                                    index === 0 ? 'bg-pink-500/50' :
-                                                    index === 1 ? 'bg-blue-500/50' :
-                                                    index === 2 ? 'bg-purple-500/50' :
-                                                    'bg-teal-500/50'
-                                                } text-white`}
+                                                className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap ${index === 0 ? 'bg-pink-500/50' :
+                                                        index === 1 ? 'bg-blue-500/50' :
+                                                            index === 2 ? 'bg-purple-500/50' :
+                                                                'bg-teal-500/50'
+                                                    } text-white`}
                                             >
                                                 {trait}
                                             </span>
@@ -259,14 +258,17 @@ export default function Dashboard() {
 
                             {/* ✅ ACTION BUTTONS - RESPONSIVE GRID */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-                                <button className="glow-button bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 sm:px-6 rounded-full transition-all duration-300 text-sm sm:text-base">
+                                {/* <button className="glow-button bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 sm:px-6 rounded-full transition-all duration-300 text-sm sm:text-base">
                                     Explore Planet 🌍
-                                </button>
+                                </button> */}
+                                <Link href="/galaxy" className="glow-button bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 sm:px-6 rounded-full transition-all duration-300 text-center text-sm sm:text-base">
+                                    Explore Planet 🌍
+                                </Link>
                                 <button onClick={handleCommunityClick} className="glow-button bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-4 sm:px-6 rounded-full transition-all duration-300 text-sm sm:text-base">
                                     Meet Community 💫
                                 </button>
-                                <Link 
-                                    href="/quiz" 
+                                <Link
+                                    href="/quiz"
                                     className="glow-button bg-pink-500 hover:bg-pink-400 text-white font-bold py-3 px-4 sm:px-6 rounded-full transition-all duration-300 text-center text-sm sm:text-base"
                                 >
                                     Retake Quiz 🔄
