@@ -115,8 +115,12 @@ function Planet({ position, color, name, type, userCount, planetData, onHover, o
 // Orbiting User Component with Dynamic Tooltip Position
 function OrbitingUser({ planetPosition, angle, radius, user, planetColor, onHover, onLeave }) {
   const meshRef = useRef();
+  const wrapperRef = useRef();
   const [hovered, setHovered] = useState(false);
   const { camera, gl } = useThree();
+
+  // Load userwrapper texture
+  const wrapperTexture = useTexture('/images/userwrapper.png');
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -402,7 +406,7 @@ const GalaxyMap = () => {
       <div className="w-full h-screen bg-black flex items-center justify-center">
         <div className="text-white text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
-          <h2 className="text-xl font-bold">🌌 Loading Galaxy...</h2>
+          <h2 className="text-xl font-bold">Loading Galaxy...</h2>
           <p className="text-sm opacity-75">Fetching cosmic twins...</p>
         </div>
       </div>

@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-// import { useRouter } from 'next/navigation';
+import InnerHeader from '../components/InnerHeader';
 
 export default function Dashboard() {
     const [user, setUser] = useState(null);
@@ -21,6 +21,7 @@ export default function Dashboard() {
                 // 1. Fetch user info
                 const userResponse = await fetch('/api/auth/me');
                 if (!userResponse.ok) {
+                    console.log('User not authenticated, redirecting to login');
                     router.push('/auth/login');
                     return;
                 }
@@ -43,6 +44,7 @@ export default function Dashboard() {
 
             } catch (error) {
                 console.error('Dashboard fetch error:', error);
+                // Don't redirect on fetch errors, just log them
             } finally {
                 setLoading(false);
             }
@@ -69,7 +71,7 @@ export default function Dashboard() {
     return (
         <>
             <style jsx global>{`
-                /* ✅ PREVENT HORIZONTAL SCROLL GLOBALLY */
+                /* Your existing styles... */
                 html, body {
                     overflow-x: hidden;
                     max-width: 100%;
@@ -105,7 +107,7 @@ export default function Dashboard() {
                     background-color: white;
                     border-radius: 50%;
                     animation: twinkle 5s infinite ease-in-out;
-                    pointer-events: none; /* ✅ PREVENT INTERACTION */
+                    pointer-events: none;
                 }
                 
                 @keyframes twinkle {
@@ -131,7 +133,6 @@ export default function Dashboard() {
                     to { transform: rotate(360deg); }
                 }
 
-                /* ✅ HIDE SCROLLBAR FOR COSMIC FRIENDS SECTION */
                 .scrollbar-hide::-webkit-scrollbar {
                     display: none;
                 }
@@ -141,13 +142,12 @@ export default function Dashboard() {
                 }
             `}</style>
 
-            {/* ✅ ROOT CONTAINER WITH OVERFLOW PREVENTION */}
             <div className="min-h-screen overflow-x-hidden w-full" style={{
                 fontFamily: 'Quicksand, sans-serif',
                 backgroundColor: '#0b021d',
-                maxWidth: '100vw' // PREVENT VIEWPORT OVERFLOW
+                maxWidth: '100vw'
             }}>
-                {/* ✅ CONSTRAINED STARS BACKGROUND */}
+                {/* Stars Background */}
                 <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
                     {Array.from({ length: 150 }).map((_, i) => (
                         <div
@@ -165,32 +165,19 @@ export default function Dashboard() {
                     ))}
                 </div>
 
-                {/* ✅ HEADER WITH CONTAINER CONSTRAINT */}
-                <header className="relative z-10 w-full">
-                    <div className="container mx-auto flex items-center justify-between px-4 py-6 max-w-6xl">
-                        <Link href="/" className="flex items-center gap-3">
-                            <div className="text-2xl font-bold text-purple-400">CosmicTwin</div>
-                        </Link>
-                        <button
-                            onClick={() => router.push('/auth/logout')}
-                            className="text-sm text-gray-300 hover:text-white transition-colors"
-                        >
-                            Logout
-                        </button>
-                    </div>
-                </header>
+                {/* ✅ PASS USER DATA TO HEADER - NO AUTO-AUTH */}
+                <InnerHeader className="z-20" userName={user?.name} />
 
-                {/* ✅ MAIN CONTENT WITH PROPER CONSTRAINTS */}
-                <main className="relative z-10 w-full min-h-screen flex items-center justify-center py-8">
+                {/* Main Content */}
+                <main className="relative w-full min-h-screen flex items-center justify-center py-8">
                     <div className="container mx-auto px-4 max-w-4xl">
                         <div className="space-y-8 w-full">
-
                             {/* Welcome Header */}
                             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center glow-text px-4">
                                 Space Traveler {user.name} has arrived <span className="text-purple-400">✦</span>
                             </h1>
 
-                            {/* ✅ PLANET INFORMATION - RESPONSIVE & CONTAINED */}
+                            {/* Planet Information */}
                             <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-center gap-6 w-full max-w-none">
                                 <div className="flex-shrink-0">
                                     <img
@@ -199,7 +186,7 @@ export default function Dashboard() {
                                         src={planet?.image || "/images/planet-xylos.jpg"}
                                     />
                                 </div>
-                                <div className="text-center md:text-left flex-1 min-w-0"> {/* ✅ min-w-0 prevents overflow */}
+                                <div className="text-center md:text-left flex-1 min-w-0">
                                     <h2 className="text-xl sm:text-2xl font-bold break-words">{planet?.name || 'Your Cosmic Planet'}</h2>
                                     <p className="text-purple-300 font-medium">{planet?.type || 'Cosmic'} Type</p>
                                     <p className="mt-2 text-gray-300 text-sm sm:text-base leading-relaxed break-words">
@@ -222,7 +209,7 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* ✅ DAILY FORTUNE - RESPONSIVE TEXT */}
+                            {/* Daily Fortune */}
                             <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6">
                                 <h3 className="text-lg sm:text-xl font-bold text-center mb-4">Message from the Stars ✨</h3>
                                 <p className="text-center text-gray-300 text-sm sm:text-base leading-relaxed break-words px-2">
@@ -233,9 +220,9 @@ export default function Dashboard() {
                                 </p>
                             </div>
 
-                            {/* ✅ COSMIC FRIENDS - HORIZONTAL SCROLL CONTAINED */}
+                            {/* Cosmic Friends */}
                             <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6">
-                                <h3 className="text-lg sm:text-xl font-bold text-center mb-4">Meet Your Cosmic Friends 🌌</h3>
+                                <h3 className="text-lg sm:text-xl font-bold text-center mb-4">Meet Your Cosmic Friends</h3>
                                 <div className="overflow-x-auto scrollbar-hide pb-2">
                                     <div className="flex items-center justify-center space-x-[-12px] min-w-max px-4">
                                         {[
@@ -256,11 +243,8 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            {/* ✅ ACTION BUTTONS - RESPONSIVE GRID */}
+                            {/* Action Buttons */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-                                {/* <button className="glow-button bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 sm:px-6 rounded-full transition-all duration-300 text-sm sm:text-base">
-                                    Explore Planet 🌍
-                                </button> */}
                                 <Link href="/galaxy" className="glow-button bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 sm:px-6 rounded-full transition-all duration-300 text-center text-sm sm:text-base">
                                     Explore Planet 🌍
                                 </Link>

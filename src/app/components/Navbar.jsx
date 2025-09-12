@@ -28,7 +28,7 @@ export default function Navbar() {
           <Link className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors" href="/about">
             About
           </Link>
-          <Link className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors" href="/planets">
+          <Link className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors" href="/galaxy">
             Planets
           </Link>
           <Link className="text-sm font-medium hover:text-[var(--primary-color)] transition-colors" href="/community">

@@ -219,12 +219,35 @@ Please try again, or contact support if the issue persists.`);
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/');
+      setIsLoading(true);
+
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include' // Important for cookies
+      });
+
+      // Always redirect on success, even if there were token issues
+      if (response.ok) {
+
+        // Clear any client-side state
+        setUserName('');
+        setShowLogoutMenu(false);
+
+        // Force hard redirect to clear everything
+        window.location.href = '/';
+      } else {
+        throw new Error('Logout API failed');
+      }
+
     } catch (error) {
-      console.error('Logout failed:', error);
+      // Still redirect on error to be safe
+      window.location.href = '/';
+    } finally {
+      setIsLoading(false);
     }
   };
+
+
 
   if (!userName) {
     return (

@@ -32,7 +32,7 @@ export async function POST(request) {
 
     keyAnswers.forEach(answer => {
       if (answer === 0) adventurousScore += 4;      // Index 0 = Adventurous (Zylos)
-      else if (answer === 1) analyticalScore += 5;  // Index 1 = Analytical (Nilos) ✅
+      else if (answer === 1) analyticalScore += 5;  // Index 1 = Analytical (Nilos) 
       else if (answer === 2) adventurousScore += 3; // Index 2 = Also Adventurous  
       else if (answer === 3) creativeScore += 3;    // Index 3 = Creative (Xylos)
       else analyticalScore += 1; // Default analytical lean
@@ -41,7 +41,7 @@ export async function POST(request) {
     // Add secondary scoring from remaining answers with heavier analytical weight
     answers.slice(3).forEach(answer => {
       if (answer === 0) adventurousScore += 1;
-      else if (answer === 1) analyticalScore += 2; // ✅ Boost analytical scoring
+      else if (answer === 1) analyticalScore += 2; 
       else if (answer === 2) adventurousScore += 1;
       else if (answer === 3) creativeScore += 1;
     });
