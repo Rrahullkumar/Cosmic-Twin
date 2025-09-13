@@ -1,4 +1,13 @@
+"use client"
+import { useRouter } from "next/navigation";
+
 export default function CommunityShowcase() {
+
+    const router = useRouter()
+
+    function handleClick(){
+        router.push("/galaxy")
+    }
     return (
         <section className="py-24 sm:py-32">
             <div className="text-center mb-16">
@@ -32,7 +41,7 @@ export default function CommunityShowcase() {
                             style={{ fontFamily: "'Orbitron', sans-serif" }}>Planet Xylos</h3>
                         <p className="text-[var(--secondary-color)] text-sm mt-2 font-light leading-relaxed h-12">
                             The planet of dreamers, artists, and architects of ethereal realities.</p>
-                        <button
+                        <button onClick={handleClick}
                             className="mt-6 w-full text-center rounded-lg h-11 px-6 bg-transparent border border-purple-400 text-purple-300 text-sm font-bold tracking-wider hover:bg-purple-400/20 hover:text-white transition-all">
                             Explore Community
                         </button>
@@ -51,7 +60,7 @@ export default function CommunityShowcase() {
                             style={{ fontFamily: "'Orbitron', sans-serif" }}>Planet Zylos</h3>
                         <p className="text-[var(--secondary-color)] text-sm mt-2 font-light leading-relaxed h-12">
                             Home to intrepid adventurers charting the unknown frontiers of the galaxy.</p>
-                        <button
+                        <button onClick={handleClick}
                             className="mt-6 w-full text-center rounded-lg h-11 px-6 bg-transparent border border-purple-400 text-purple-300 text-sm font-bold tracking-wider hover:bg-purple-400/20 hover:text-white transition-all">
                             Explore Community
                         </button>
@@ -70,7 +79,7 @@ export default function CommunityShowcase() {
                             style={{ fontFamily: "'Orbitron', sans-serif" }}>Planet Nilos</h3>
                         <p className="text-[var(--secondary-color)] text-sm mt-2 font-light leading-relaxed h-12">A
                             civilization of thinkers, innovators, and keepers of cosmic knowledge.</p>
-                        <button
+                        <button onClick={handleClick}
                             className="mt-6 w-full text-center rounded-lg h-11 px-6 bg-transparent border border-purple-400 text-purple-300 text-sm font-bold tracking-wider hover:bg-purple-400/20 hover:text-white transition-all">
                             Explore Community
                         </button>
