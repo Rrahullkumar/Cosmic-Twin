@@ -162,3 +162,32 @@ function cleanJsonFromText(text) {
     return jsonText;
   }
 }
+
+export async function generateText(prompt, model = "mistral-small-latest") {
+  try {
+    const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.MISTRAL_API_KEY}`
+      },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 500,
+        temperature: 0.7
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Mistral API error: ${response.status} - ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content?.trim() || "";
+  } catch (error) {
+    console.error("❌ generateText error:", error);
+    throw error;
+  }
+}
+
