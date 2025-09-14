@@ -1,4 +1,3 @@
-// components/GalaxyMap.jsx - COMPLETE FIXED VERSION
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
