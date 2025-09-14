@@ -1,7 +1,11 @@
 'use client';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function HeroSection() {
+
+    const router = useRouter();
+
     useEffect(() => {
         // Particle animation script
         const particleContainer = document.getElementById('particle-container');
@@ -89,7 +93,7 @@ export default function HeroSection() {
                     <p className="max-w-2xl text-lg text-slate-300 mt-6 mx-auto lg:mx-0">Discover your celestial
                         match and connect with your cosmic community through the stars. Our advanced algorithm
                         analyzes your personality to reveal your planetary counterpart.</p>
-                    <button
+                    <button onClick={() => router.push('/auth/signup')}
                         className="mt-10 min-w-[200px] transform transition-transform hover:scale-105 items-center justify-center rounded-full h-14 px-10 text-lg font-bold tracking-wider hover:opacity-90 shadow-[0_0_20px_rgba(238,99,238,0.5)]"
                         style={{
                             background: 'linear-gradient(to right, #7c3aed, #ec4899)',

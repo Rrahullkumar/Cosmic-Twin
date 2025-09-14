@@ -581,10 +581,10 @@ Please try again, or contact support if the issue persists.`);
                   <div className="font-medium text-white">{userName}</div>
                 </div>
                 <div className="logout-menu-item" onClick={() => router.push('/profile')}>
-                  👤 My Profile
+                  My Profile
                 </div>
                 <div className="logout-menu-item" onClick={() => router.push('/dashboard')}>
-                  🌌 Dashboard
+                  Dashboard
                 </div>
                 <div className="logout-menu-item" onClick={handleLogout}>
                   🚀 Logout
