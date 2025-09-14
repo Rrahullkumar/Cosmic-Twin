@@ -56,7 +56,7 @@ The platform combines **Qdrant**, **Mistral AI**, and **React Three Fiber** to c
 ## 📸 Screenshots
 
 ### 🏠 Landing Page & Quiz Experience
-![CosmicTwin Landing](Screenshot_14-9-2025_145852_cosmic-twin-vr.vercel.app.jpeg)
+![CosmicTwin Landing](./Screenshot_14-9-2025_145852_cosmic-twin-vr.vercel.app.jpeg)
 *Beautiful cosmic-themed homepage that welcomes users to their journey*
 
 ![Login/Signup](Screenshot_14-9-2025_145959_cosmic-twin-vr.vercel.app.jpeg)
