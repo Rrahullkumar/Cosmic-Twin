@@ -65,7 +65,7 @@ The platform combines **Qdrant**, **Mistral AI**, and **React Three Fiber** to c
 *Interactive 10-question cosmic personality assessment*
 
 ### 🪐 Planet Match & Galaxy View
-![Planet Match Results](public/dashboard.jpeg)
+![Planet Match Results](public/dash.jpeg)
 *Discover your cosmic twin planet with personalized traits*
 
 ![3D Galaxy Map](public/galaxy.png)
