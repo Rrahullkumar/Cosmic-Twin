@@ -56,23 +56,23 @@ The platform combines **Qdrant**, **Mistral AI**, and **React Three Fiber** to c
 ## 📸 Screenshots
 
 ### 🏠 Landing Page & Quiz Experience
-![CosmicTwin Landing](Screenshot_14-9-2025_145852_cosmic-twin-vr.vercel.app.jpeg)
+![CosmicTwin Landing](public/landing.jpeg)
 *Beautiful cosmic-themed homepage that welcomes users to their journey*
 
 ![Login/Signup](Screenshot_14-9-2025_145959_cosmic-twin-vr.vercel.app.jpeg)
 
-![Personality Quiz](Screenshot_14-9-2025_15132_cosmic-twin-vr.vercel.app.jpeg)
+![Personality Quiz](public/quiz.jpeg)
 *Interactive 10-question cosmic personality assessment*
 
 ### 🪐 Planet Match & Galaxy View
-![Planet Match Results](Screenshot_14-9-2025_15217_cosmic-twin-vr.vercel.app.jpeg)
+![Planet Match Results](public/dashboard.jpeg)
 *Discover your cosmic twin planet with personalized traits*
 
-![3D Galaxy Map](Screenshots\Screenshot 2025-09-14 150347.png)
+![3D Galaxy Map](public/galaxy.png)
 *Interactive 3D galaxy built with React Three Fiber showing users and planetss*
 
 ### 💬 Community Features
-![Community Hub](Screenshots\Screenshot 2025-09-14 150714.png)
+![Community Hub](public/community.png)
 *Global & local chat with your planetary community*
 
 ---
@@ -83,9 +83,11 @@ The platform combines **Qdrant**, **Mistral AI**, and **React Three Fiber** to c
 ### Prerequisites
 - Node.js 18+ installed
 - Git installed
-```git clone https://github.com/Rrahullkumar/Cosmic-Twin
-    cd cosmic-twin
-    npm install```
+```bash
+git clone https://github.com/Rrahullkumar/Cosmic-Twin
+cd cosmic-twin
+npm install
+```
 
 - Add your own API keys to `.env.local` (MongoDB URI, Qdrant credentials, Mistral API key)
     **Run the development server**
