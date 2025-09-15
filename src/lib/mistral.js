@@ -64,7 +64,7 @@ export async function generateEmbedding(text) {
       }
     }
     
-    console.log('✅ Mistral embedding validation passed');
+    // console.log(' Mistral embedding validation passed');
     return embedding;
     
   } catch (error) {
@@ -139,7 +139,7 @@ function cleanJsonFromText(text) {
     JSON.parse(text);
     return text;
   } catch (e) {
-    console.log('🔧 Need to clean JSON response...');
+    // console.log(' Need to clean JSON response...');
     
     // Extract JSON object using regex
     const jsonMatch = text.match(/\{[\s\S]*?\}/);
@@ -158,7 +158,7 @@ function cleanJsonFromText(text) {
       jsonText = jsonText.substring(0, lastBrace + 1);
     }
     
-    console.log('🧹 Extracted JSON:', jsonText);
+    // console.log(' Extracted JSON:', jsonText);
     return jsonText;
   }
 }

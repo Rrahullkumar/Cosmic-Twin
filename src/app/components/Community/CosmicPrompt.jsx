@@ -23,7 +23,7 @@ export default function CosmicPrompt() {
         
         const data = await response.json();
         setPrompt(data);
-        console.log('✅ Cosmic prompt loaded:', data.question);
+        // console.log(' Cosmic prompt loaded:', data.question);
         
       } catch (err) {
         console.error('Cosmic prompt error:', err);

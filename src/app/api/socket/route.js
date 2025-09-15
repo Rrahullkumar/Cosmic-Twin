@@ -8,7 +8,6 @@ let io;
 
 export async function GET(req) {
   if (!res.socket.server.io) {
-    console.log('🚀 Starting Socket.IO server...');
     
     io = new Server(res.socket.server, {
       path: '/api/socket',
@@ -20,7 +19,7 @@ export async function GET(req) {
     });
 
     io.on('connection', async (socket) => {
-      console.log('✅ User connected:', socket.id);
+
 
       // Join global chat room
       socket.join('global-chat');
@@ -59,7 +58,6 @@ export async function GET(req) {
 
       // Handle user disconnect
       socket.on('disconnect', () => {
-        console.log('❌ User disconnected:', socket.id);
       });
     });
 

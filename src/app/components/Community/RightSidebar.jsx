@@ -13,7 +13,7 @@ export default function RightSidebar() {
     setError(null);
     
     try {
-      console.log('🔍 Searching for cosmic twinmates...');
+      // console.log('🔍 Searching for cosmic twinmates...');
       
       const response = await fetch('/api/twinmates/search', {
         method: 'POST',
@@ -30,7 +30,7 @@ export default function RightSidebar() {
       
       if (data.success && data.twinmates) {
         setTwinmates(data.twinmates.slice(0, 5)); // Show top 2-5 results
-        console.log('✅ Found twinmates:', data.twinmates.length);
+        // console.log(' Found twinmates:', data.twinmates.length);
       } else {
         setError(data.error || 'No twinmates found');
         setTwinmates([]);

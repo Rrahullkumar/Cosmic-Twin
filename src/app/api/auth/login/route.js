@@ -35,7 +35,7 @@ export async function POST(request) {
       path: '/'
     });
 
-    console.log('✅ Login successful for:', user.name);
+    // console.log('✅ Login successful for:', user.name);
 
     return Response.json({
       success: true,

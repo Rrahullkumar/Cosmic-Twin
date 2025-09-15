@@ -12,8 +12,8 @@ export async function GET() {
       matched_planet: { $exists: true }
     }).select('name email matched_planet').lean();
 
-    console.log('🌌 Fetched users:', users.length);
-    console.log('👥 Sample user data:', users[0]); // Debug log
+    // console.log('🌌 Fetched users:', users.length);
+    // console.log('👥 Sample user data:', users[0]); // Debug log
 
     return Response.json(users);
   } catch (error) {

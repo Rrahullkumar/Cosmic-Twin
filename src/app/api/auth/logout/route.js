@@ -11,7 +11,7 @@ async function verifyToken(req) {
       try {
         return { token, decoded: jwt.verify(token, process.env.JWT_SECRET), cookieName: name };
       } catch (err) {
-        console.log(`Invalid token for ${name}:`, err.message);
+        // console.log(`Invalid token for ${name}:`, err.message);
       }
     }
   }
@@ -31,7 +31,7 @@ export async function POST(req) {
     // await db.query('UPDATE users SET jwt_token = NULL WHERE id = $1', [decoded.id]);
     
   } catch (error) {
-    console.log(' Token verification failed:', error.message);
+    // console.log(' Token verification failed:', error.message);
     // Continue anyway to clear cookies
   }
 
@@ -58,6 +58,5 @@ export async function POST(req) {
     });
   });
 
-  console.log('🧹 All cookies cleared');
   return response;
 }

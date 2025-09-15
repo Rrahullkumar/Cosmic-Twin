@@ -9,7 +9,6 @@ export async function getCurrentUser() {
     const token = cookieStore.get('auth-token')?.value;
     
     if (!token) {
-      console.log('No auth token found');
       return null;
     }
 
@@ -20,11 +19,11 @@ export async function getCurrentUser() {
     const user = await User.findById(decoded.userId);
     
     if (!user) {
-      console.log('User not found');
+      // console.log('User not found');
       return null;
     }
 
-    // console.log('✅ User authenticated via JWT:', user.name);
+    // console.log(' User authenticated via JWT:', user.name);
     return user;
     
   } catch (error) {

@@ -2,19 +2,18 @@ import { generateEmbedding } from '@/lib/mistral';
 import { planetsData } from '@/data/planets';
 
 export async function POST(request) {
-  console.log('Seed planets API called - FIXED VERSION');
   
   try {
     // Process all planets
     for (const planet of planetsData) {
-      console.log(`Processing ${planet.name}...`);
-      console.log(`- Planet ID (UUID): ${planet.id}`); // Now shows UUID
+      // console.log(`Processing ${planet.name}...`);
+      // console.log(`- Planet ID (UUID): ${planet.id}`); // Now shows UUID
       
       // Generate embedding
       const embeddingText = `${planet.name} is a ${planet.type} planet. ${planet.description}`;
       const embedding = await generateEmbedding(embeddingText);
       
-      console.log('Embedding generated, length:', embedding.length);
+      // console.log('Embedding generated, length:', embedding.length);
       
       // Create payload with raw HTTP API
       const rawPayload = {
@@ -34,7 +33,7 @@ export async function POST(request) {
         }]
       };
       
-      console.log('🌐 Making HTTP request to Qdrant...');
+      // console.log('🌐 Making HTTP request to Qdrant...');
       
       // Raw HTTP request (since JS SDK had issues)
       const response = await fetch(`${process.env.QDRANT_URL}/collections/planets/points`, {
@@ -47,7 +46,7 @@ export async function POST(request) {
       });
       
       if (response.ok) {
-        console.log(`✅ ${planet.name} seeded successfully!`);
+        // console.log(`✅ ${planet.name} seeded successfully!`);
       } else {
         const errorText = await response.text();
         console.error(`❌ Failed to seed ${planet.name}:`, errorText);

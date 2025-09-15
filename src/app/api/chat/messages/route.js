@@ -18,17 +18,20 @@ export async function GET() {
       .populate('sender', 'name')
       .lean();
 
-    // Reverse to show oldest first
-    const formattedMessages = messages.reverse().map(msg => ({
-      id: msg._id.toString(),
-      content: msg.content,
-      sender: {
-        id: msg.sender._id.toString(),
-        name: msg.sender.name
-      },
-      timestamp: msg.createdAt,
-      isCurrentUser: msg.sender._id.toString() === user._id.toString()
-    }));
+    // Filter out messages with null senders and reverse to show oldest first
+    const formattedMessages = messages
+      .reverse()
+      .filter(msg => msg.sender !== null) // Add this filter
+      .map(msg => ({
+        id: msg._id.toString(),
+        content: msg.content,
+        sender: {
+          id: msg.sender._id.toString(),
+          name: msg.sender.name
+        },
+        timestamp: msg.createdAt,
+        isCurrentUser: msg.sender._id.toString() === user._id.toString()
+      }));
 
     return Response.json({ success: true, messages: formattedMessages });
 

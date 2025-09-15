@@ -15,11 +15,8 @@ export async function GET() {
     const token = cookieStore.get('auth-token')?.value;
     
     if (!token) {
-      console.log('❌ No auth token found in cookies');
       return Response.json({ error: 'Not authenticated' }, { status: 401 });
     }
-
-    console.log('🔍 Verifying JWT token...');
     
     // Verify JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -28,11 +25,11 @@ export async function GET() {
     const user = await User.findById(decoded.userId || decoded.id).select('-password');
     
     if (!user) {
-      console.log('❌ User not found:', decoded.userId || decoded.id);
+      // console.log('❌ User not found:', decoded.userId || decoded.id);
       return Response.json({ error: 'User not found' }, { status: 401 });
     }
 
-    console.log('✅ User authenticated:', user.name);
+    // console.log(' User authenticated:', user.name);
 
     return Response.json({
       user: {

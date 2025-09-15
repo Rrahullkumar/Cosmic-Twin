@@ -14,7 +14,7 @@ export async function GET() {
             return NextResponse.json(cachedPrompt);
         }
 
-        console.log('🌌 Generating new cosmic prompt with Mistral AI...');
+        // console.log('🌌 Generating new cosmic prompt with Mistral AI...');
 
         // Generate new prompt using Mistral AI
         const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
@@ -76,7 +76,7 @@ export async function GET() {
         cachedPrompt = newPrompt;
         lastGenerated = now;
 
-        console.log('✅ New cosmic prompt generated:', newPrompt.question);
+        // console.log('✅ New cosmic prompt generated:', newPrompt.question);
         return NextResponse.json(newPrompt);
 
     } catch (error) {

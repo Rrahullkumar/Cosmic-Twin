@@ -30,7 +30,6 @@ export default function InnerHeader({ userName }) {
       });
 
       if (response.ok) {
-        console.log('✅ Logout successful');
         setShowLogoutMenu(false);
         
         // Force hard redirect to clear everything

@@ -9,7 +9,7 @@ import DailyPoll from '@/models/DailyPoll';
 
 export async function GET() {
   try {
-    console.log('🎯 Poll API called at:', new Date().toISOString());
+    // console.log('🎯 Poll API called at:', new Date().toISOString());
     
     await connectDB();
     
@@ -20,7 +20,7 @@ export async function GET() {
     });
 
     if (currentPoll) {
-      console.log('📋 Found active poll in database');
+      // console.log('📋 Found active poll in database');
       const pollData = {
         id: currentPoll._id.toString(),
         question: currentPoll.question,
@@ -41,7 +41,7 @@ export async function GET() {
     }
 
     // No active poll, generate new one
-    console.log('🎯 Generating new poll with Mistral AI...');
+    // console.log('🎯 Generating new poll with Mistral AI...');
     const pollData = await generatePollQuestion();
     
     // Deactivate old polls
@@ -67,7 +67,7 @@ export async function GET() {
       expiresAt: newPoll.expiresAt
     };
     
-    console.log('✅ New poll created:', pollData.question);
+    // console.log('✅ New poll created:', pollData.question);
 
     return NextResponse.json({ poll: responseData }, {
       headers: {

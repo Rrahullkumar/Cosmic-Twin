@@ -187,8 +187,8 @@ function Stars() {
 function GalaxyScene({ planetsData, usersData, onPlanetHover, onPlanetLeave, onUserHover, onUserLeave }) {
   const usersByPlanet = {};
 
-  console.log('🌌 === DEBUGGING GALAXY DATA ===');
-  console.log('📊 Planets:', planetsData.map(p => ({ id: p.id, name: p.name })));
+  // console.log(' === DEBUGGING GALAXY DATA ===');
+  // console.log(' Planets:', planetsData.map(p => ({ id: p.id, name: p.name })));
 
   const planetNameToId = {};
   planetsData.forEach(planet => {

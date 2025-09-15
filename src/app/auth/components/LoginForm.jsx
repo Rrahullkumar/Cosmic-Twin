@@ -29,7 +29,7 @@ export default function LoginForm() {
 
       if (response.ok) {
         // Success - redirect to quiz or dashboard
-        console.log('Login successful:', data);
+        // console.log('Login successful:', data);
         router.push('/quiz');
       } else {
         // Show error from API

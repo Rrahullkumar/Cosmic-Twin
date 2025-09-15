@@ -11,10 +11,10 @@ export async function POST(request) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    console.log(`🎯 Processing quiz for user: ${user.name} (ID: ${user._id})`);
+    // console.log(`🎯 Processing quiz for user: ${user.name} (ID: ${user._id})`);
 
     const { answers } = await request.json();
-    console.log('📊 Quiz answers:', answers);
+    // console.log('📊 Quiz answers:', answers);
 
     // ✨ FIXED: Create highly distinctive personality profiles
     const personalityArchetypes = {
@@ -58,17 +58,17 @@ export async function POST(request) {
 
     const personalityProfile = personalityArchetypes[dominantType];
 
-    console.log('🧠 Generated personality type:', dominantType);
-    console.log('🧠 Generating embedding...');
+    // console.log('🧠 Generated personality type:', dominantType);
+    // console.log('🧠 Generating embedding...');
     const embedding = await generateEmbedding(personalityProfile);
-    console.log('✅ Embedding generated, length:', embedding.length);
+    // console.log('✅ Embedding generated, length:', embedding.length);
 
     // Generate UUID for Qdrant point ID
     const qdrantPointId = uuidv4();
-    console.log('📋 Generated Qdrant point ID:', qdrantPointId);
+    // console.log('📋 Generated Qdrant point ID:', qdrantPointId);
 
     // Store in Qdrant users collection
-    console.log('💾 Storing user embedding in Qdrant...');
+    // console.log('💾 Storing user embedding in Qdrant...');
     const response = await fetch(`${process.env.QDRANT_URL}/collections/users/points`, {
       method: 'PUT',
       headers: {
@@ -98,10 +98,10 @@ export async function POST(request) {
       throw new Error(`Qdrant error: ${error}`);
     }
 
-    console.log('✅ Qdrant embedding stored successfully');
+    // console.log('✅ Qdrant embedding stored successfully');
 
     // ✅ CRITICAL FIX: UPDATE MONGODB WITH PERSONALITY_VECTOR
-    console.log('💾 Updating MongoDB with personality vector...');
+    // console.log('💾 Updating MongoDB with personality vector...');
     await connectDB();
 
     const updateResult = await User.findByIdAndUpdate(
@@ -120,21 +120,19 @@ export async function POST(request) {
       { new: true, upsert: false } // Return updated document, don't create new
     );
 
-    console.log('💾 MongoDB update result:', {
-      userId: updateResult._id,
-      quiz_completed: updateResult.quiz_completed,
-      has_personality_vector: !!updateResult.personality_vector,
-      vector_length: updateResult.personality_vector?.length || 0,
-      qdrant_point_id: updateResult.qdrant_point_id,
-      personality_type: updateResult.personality_type
-    });
+    // console.log('💾 MongoDB update result:', {
+    //   userId: updateResult._id,
+    //   quiz_completed: updateResult.quiz_completed,
+    //   has_personality_vector: !!updateResult.personality_vector,
+    //   vector_length: updateResult.personality_vector?.length || 0,
+    //   qdrant_point_id: updateResult.qdrant_point_id,
+    //   personality_type: updateResult.personality_type
+    // });
 
     // ✨ VERIFY the update worked
     if (!updateResult.personality_vector) {
       throw new Error('Failed to save personality_vector to MongoDB');
     }
-
-    console.log('✅ Quiz results saved successfully to both Qdrant and MongoDB!');
 
     return Response.json({
       success: true,

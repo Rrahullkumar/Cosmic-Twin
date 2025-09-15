@@ -3,20 +3,20 @@ import { generateEmbedding } from '@/lib/mistral';
 import { planetsData } from '@/data/planets';
 
 export async function POST(request) {
-  console.log('🚀 Seed planets API called');
+  // console.log(' Seed planets API called');
   
   try {
     await initializeCollections();
     const client = getQdrantClient();
     
     const planet = planetsData[0]; // Test with first planet
-    console.log(`🪐 Processing ${planet.name}...`);
+    // console.log(`🪐 Processing ${planet.name}...`);
     
     const embeddingText = `${planet.name} is a ${planet.type} planet.`;
-    console.log('📝 Embedding text:', embeddingText);
+    // console.log('📝 Embedding text:', embeddingText);
     
     // Generate embedding
-    console.log('🧠 Calling Mistral API...');
+    // console.log('🧠 Calling Mistral API...');
     const embedding = await generateEmbedding(embeddingText);
     
     // 🔍 DETAILED EMBEDDING DEBUG
@@ -35,9 +35,9 @@ export async function POST(request) {
       const infinityCount = embedding.filter(val => !isFinite(val)).length;
       const nonNumberCount = embedding.filter(val => typeof val !== 'number').length;
       
-      console.log('- NaN values:', nanCount);
-      console.log('- Infinity values:', infinityCount);
-      console.log('- Non-number values:', nonNumberCount);
+      // console.log('- NaN values:', nanCount);
+      // console.log('- Infinity values:', infinityCount);
+      // console.log('- Non-number values:', nonNumberCount);
     }
     
     // Validate embedding
@@ -61,7 +61,7 @@ export async function POST(request) {
       }]
     });
     
-    console.log('✅ SUCCESS!', result);
+    // console.log('✅ SUCCESS!', result);
     
     return Response.json({ 
       success: true, 

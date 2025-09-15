@@ -21,7 +21,7 @@ export default function Dashboard() {
                 // 1. Fetch user info
                 const userResponse = await fetch('/api/auth/me');
                 if (!userResponse.ok) {
-                    console.log('User not authenticated, redirecting to login');
+                    // console.log('User not authenticated, redirecting to login');
                     router.push('/auth/login');
                     return;
                 }

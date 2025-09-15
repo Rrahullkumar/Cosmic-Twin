@@ -26,7 +26,7 @@ export async function GET() {
       planet.traits = [planet.traits];
     }
 
-    console.log('🔍 Planet data being returned:', JSON.stringify(planet, null, 2));
+    // console.log(' Planet data being returned:', JSON.stringify(planet, null, 2));
 
     return Response.json({
       success: true,

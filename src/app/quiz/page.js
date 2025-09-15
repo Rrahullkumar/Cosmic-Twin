@@ -155,9 +155,6 @@ export default function QuizPage() {
         setIsLoading(true);
 
         try {
-          console.log('🎉 Quiz completed! Final answers:', newAnswers);
-          console.log('📊 Answer count:', newAnswers.length);
-          console.log('📊 Each answer:', newAnswers.map((ans, idx) => `Q${idx}: ${ans}`));
 
           const completeResponse = await fetch('/api/quiz/complete', {
             method: 'POST',
@@ -172,8 +169,6 @@ export default function QuizPage() {
             throw new Error(errorData.error || 'Failed to save quiz results');
           }
 
-          console.log('✅ Quiz results saved, finding your cosmic twin...');
-
           // Step 2: Find matching planet
           const matchResponse = await fetch('/api/quiz/match-planet', {
             method: 'POST',
@@ -185,7 +180,7 @@ export default function QuizPage() {
           }
 
           const matchData = await matchResponse.json();
-          console.log('🪐 Matched planet:', matchData.matched_planet);
+          // console.log(' Matched planet:', matchData.matched_planet);
 
           // Step 3: Show results with better formatting
           const similarityPercent = Math.round(matchData.matched_planet.similarity_score * 100);

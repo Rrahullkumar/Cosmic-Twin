@@ -4,25 +4,25 @@ import User from '@/models/User';
 
 export async function POST() {
   try {
-    console.log('🔍 Starting twinmate search...');
+    // console.log(' Starting twinmate search...');
 
     const user = await getCurrentUser();
-    console.log('👤 Current user:', user?.name || 'Not authenticated');
+    // console.log('👤 Current user:', user?.name || 'Not authenticated');
 
     if (!user) {
-      console.log('❌ User not authenticated');
+      // console.log('❌ User not authenticated');
       return Response.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
     await connectDB();
-    console.log('✅ Database connected');
+    // console.log('✅ Database connected');
 
     const userWithVector = await User.findById(user._id);
-    console.log('📊 User vector exists:', !!userWithVector?.personality_vector);
-    console.log('📊 Vector length:', userWithVector?.personality_vector?.length || 0);
+    // console.log(' User vector exists:', !!userWithVector?.personality_vector);
+    // console.log(' Vector length:', userWithVector?.personality_vector?.length || 0);
 
     if (!userWithVector || !userWithVector.personality_vector) {
-      console.log('❌ No personality vector found');
+      // console.log(' No personality vector found');
       return Response.json({
         success: false,
         error: 'Please complete the personality quiz first to find twinmates'
@@ -30,8 +30,8 @@ export async function POST() {
     }
 
     // ✨ PERFORM ACTUAL QDRANT SEARCH
-    console.log('🔍 Searching for twinmates using Qdrant...');
-    console.log('🌐 Qdrant URL:', process.env.QDRANT_URL);
+    // console.log('🔍 Searching for twinmates using Qdrant...');
+    // console.log('🌐 Qdrant URL:', process.env.QDRANT_URL);
 
     const response = await fetch(`${process.env.QDRANT_URL}/collections/users/points/search`, {
       method: 'POST',
@@ -47,7 +47,7 @@ export async function POST() {
       })
     });
 
-    console.log('📡 Qdrant response status:', response.status);
+    // console.log('📡 Qdrant response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -70,10 +70,10 @@ export async function POST() {
     }
 
     const searchData = await response.json();
-    console.log('📊 Raw search results:', searchData.result?.length || 0);
+    // console.log(' Raw search results:', searchData.result?.length || 0);
 
     if (!searchData.result || searchData.result.length === 0) {
-      console.log('❓ No search results found');
+      // console.log(' No search results found');
       return Response.json({
         success: true,
         twinmates: [],
@@ -87,13 +87,13 @@ export async function POST() {
     // Filter out current user and format results
     const twinmates = searchResults
       .filter(result => {
-        console.log('🔍 Checking result:', result.payload?.mongoUserId, 'vs current user:', user._id.toString());
+        // console.log(' Checking result:', result.payload?.mongoUserId, 'vs current user:', user._id.toString());
         return result.payload?.mongoUserId !== user._id.toString();
       })
       .slice(0, 5)
       .map(result => {
         const compatibility = Math.round((result.score || 0) * 100);
-        console.log('✨ Found match:', result.payload?.name, 'compatibility:', compatibility + '%');
+        // console.log('✨ Found match:', result.payload?.name, 'compatibility:', compatibility + '%');
         
         return {
           id: result.payload?.mongoUserId || 'unknown',
@@ -104,8 +104,8 @@ export async function POST() {
         };
       });
 
-    console.log('✅ Found twinmates:', twinmates.length);
-    console.log('🎯 Twinmate details:', twinmates.map(t => `${t.name} (${t.compatibility})`));
+    // console.log(' Found twinmates:', twinmates.length);
+    // console.log(' Twinmate details:', twinmates.map(t => `${t.name} (${t.compatibility})`));
 
     return Response.json({
       success: true,

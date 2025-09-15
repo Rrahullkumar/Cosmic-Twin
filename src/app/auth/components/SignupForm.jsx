@@ -30,7 +30,6 @@ export default function SignupForm() {
 
       if (response.ok) {
         // Success - redirect to quiz
-        console.log('Account created successfully:', data);
         router.push('/auth/login');
       } else {
         // Show error from API

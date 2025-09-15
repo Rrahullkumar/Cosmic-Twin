@@ -9,18 +9,18 @@ export async function POST(request) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    console.log(`🔍 Finding match for user: ${user.name} (ID: ${user._id})`);
+    // console.log(`🔍 Finding match for user: ${user.name} (ID: ${user._id})`);
 
     // Get fresh user data from MongoDB
     await connectDB();
     const userDoc = await User.findById(user._id);
     
-    console.log('📋 User document check:', {
-      userId: userDoc._id,
-      quiz_completed: userDoc.quiz_completed,
-      qdrant_point_id: userDoc.qdrant_point_id,
-      hasQdrantPointId: !!userDoc.qdrant_point_id
-    });
+    // console.log('📋 User document check:', {
+    //   userId: userDoc._id,
+    //   quiz_completed: userDoc.quiz_completed,
+    //   qdrant_point_id: userDoc.qdrant_point_id,
+    //   hasQdrantPointId: !!userDoc.qdrant_point_id
+    // });
     
     if (!userDoc.quiz_completed) {
       return Response.json({ 
@@ -34,7 +34,7 @@ export async function POST(request) {
       }, { status: 404 });
     }
 
-    console.log('🔍 Fetching user vector from Qdrant with ID:', userDoc.qdrant_point_id);
+    // console.log('🔍 Fetching user vector from Qdrant with ID:', userDoc.qdrant_point_id);
 
     // Get user's embedding from Qdrant
     const userResponse = await fetch(`${process.env.QDRANT_URL}/collections/users/points/${userDoc.qdrant_point_id}`, {
@@ -54,10 +54,10 @@ export async function POST(request) {
     const userData = await userResponse.json();
     const userVector = userData.result.vector;
 
-    console.log('✅ User vector retrieved, length:', userVector.length);
+    // console.log('✅ User vector retrieved, length:', userVector.length);
 
     // Search for similar planets
-    console.log('🔍 Searching for matching planets...');
+    // console.log('🔍 Searching for matching planets...');
     const searchResponse = await fetch(`${process.env.QDRANT_URL}/collections/planets/points/search`, {
       method: 'POST',
       headers: {
@@ -73,7 +73,7 @@ export async function POST(request) {
     });
 
     const searchData = await searchResponse.json();
-    console.log('🔍 Planet search results:', searchData.result?.length || 0, 'matches');
+    // console.log('🔍 Planet search results:', searchData.result?.length || 0, 'matches');
     
     if (!searchData.result || searchData.result.length === 0) {
       return Response.json({ 
@@ -95,7 +95,7 @@ export async function POST(request) {
       similarity_score: bestMatch.score
     };
 
-    console.log('🪐 Best match found:', matchedPlanet.name, 'with score:', bestMatch.score);
+    // console.log('🪐 Best match found:', matchedPlanet.name, 'with score:', bestMatch.score);
 
     // Save to MongoDB
     await User.findByIdAndUpdate(user._id, {
@@ -105,8 +105,6 @@ export async function POST(request) {
       },
       planet_matched: true
     });
-
-    console.log('✅ Match saved to MongoDB');
 
     return Response.json({
       success: true,

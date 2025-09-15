@@ -18,7 +18,7 @@ const Poll = () => {
 
   const fetchCurrentPoll = async () => {
     try {
-      console.log('🔄 Fetching poll from client...');
+      // console.log(' Fetching poll from client...');
       
       // Add timestamp to prevent caching
       const timestamp = new Date().getTime();
@@ -29,16 +29,16 @@ const Poll = () => {
         }
       });
       
-      console.log('📡 Response status:', response.status);
+      // console.log('Response status:', response.status);
       
       const data = await response.json();
-      console.log('📊 Poll data received:', data);
+      // console.log(' Poll data received:', data);
       
       if (data.poll) {
         setPoll(data.poll);
-        console.log('✅ Poll set:', data.poll.question);
+        // console.log('Poll set:', data.poll.question);
       } else {
-        console.log('❌ No poll in response');
+        // console.log(' No poll in response');
       }
       
       setLoading(false);
@@ -81,7 +81,7 @@ const Poll = () => {
   }
 
   // Debug log
-  console.log('🎯 Current poll state:', poll);
+  // console.log('🎯 Current poll state:', poll);
 
   return (
     <div className="poll-container rounded-2xl" style={{ background: 'var(--lavender-purple)' }}>
